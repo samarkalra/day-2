@@ -1,0 +1,25 @@
+body {
+    margin: 0;
+}
+main {
+    text-align: center;
+}
+#input-wrapper > input {
+    margin-right: 8px;
+    padding: 12px 24px;
+}
+#input-wrapper > select {
+    margin-right: 8px;
+    padding: 12px 24px;
+}
+#btn-wrapper {
+    margin-top: 32px;
+}
+#btn-wrapper > button {
+    margin-right: 8px;
+    padding: 12px 24px;
+}
+#outputField {
+    margin-top: 32px;
+    padding: 12px 24px;
+}
