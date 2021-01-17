@@ -7,7 +7,7 @@ let resetButton = document.getElementById('btn-reset')
 
 //getting operaion name from dropdown
 let operationName = "up"
-operations.addEventListener('change', (e) => {
+operations.addEventListener('input', (e) => {
   operationName = e.target.value
 })
 
@@ -17,27 +17,35 @@ applyButton.addEventListener('click', () => {
   } else {
       if(operationName === "up") {
         up()
+        outputField.value = upval
         console.log("up called")
     } else if(operationName === "down") {
         down()
+        outputField.value = downval
         console.log("down called")
     } else if(operationName === "max") {
         maxArr()
+        outputField.value = maxval
         console.log("max called")
     } else if(operationName === "min") {
         minArr()
+        outputField.value = minval
         console.log("min called")
     } else if(operationName === "sum") {
         sum()
+        outputField.value = sumval
         console.log("sum called")
     } else if(operationName === "median") {
         median()
+        outputField.value = medianval
         console.log("median called")
     } else if(operationName === "mean") {
         mean()
+        outputField.value = meanval
         console.log("mean called")
     } else if(operationName === "stdev") {
         std()
+        outputField.value = stdval
         console.log("stdev called")
     }
   }
@@ -83,132 +91,82 @@ resetButton.addEventListener('click', () => {
 
 //data-analysis operation implementations
 function up() {
-  if(upval==null){
-    upval = []
-    if(downval != null){
+  if(upval === null){
+    if(downval !== null){
       for(var i=downval.length-1; i>=0; i--){
         upval.push(downval[i]);
       }
-      outputField.value = upval
     }
     else{
-      const inputASorted = inputArr.sort(function(a, b){return a-b})
-      outputField.value = upval
-      upval = inputASorted;
+      upval = inputArr.sort(function(a, b){return a-b})
     }
-  } else{
-    outputField.value = upval
-  }
+  } 
 }
 
 function down() {
-  if(downval==null){
-    downval=[];
-    if(upval != null){
+  if(downval === null){
+    if(upval !== null){
       for(var i=upval.length-1; i>=0; i--){
         downval.push(upval[i]);
       }
-      outputField.value = downval
     }
     else{
-      const inputDSorted = inputArr.sort(function(a, b){return b-a});
-      outputField.value = inputDSorted
-      downval = inputDSorted;
+      downval = inputArr.sort(function(a, b){return b-a});
     }
   }
-  else{
-    outputField.value = downval
-  }
-
 }
 
 function maxArr(){
-  if(maxval==null){
+  if(maxval === null){
     if(upval != null) maxval =upval[upval.length-1];
-    else if(downval!=null) maxval = downval[0];
+    else if(downval !== null) maxval = downval[0];
     else maxval = Math.max(...inputArr);
   }
-  outputField.value = maxval
-
 }
 
 function minArr(){
-  if(minval==null){
-    if(upval != null) minval = upval[0];
-    else if(downval != null) minval = downval[downval.length-1];
+  if(minval === null){
+    if(upval !== null) minval = upval[0];
+    else if(downval !== null) minval = downval[downval.length-1];
     else minval = Math.min(...inputArr);
   }
-  outputField.value = minval
 }
 
 function sum() {
-  if(sumval==null){
+  if(sumval === null){
     sumval = inputArr.reduce(function(a, b){
       return a + b;
     }, 0);
   }
-  outputField.value = sumval
 }
 
 function median() {
-  if(medianval == null){
-    var inputASorted = [];
-    if(upval != null){
-      for(var i=0; i<upval.length; i++){
-        inputASorted.push(upval[i]);
-      }
+  if(medianval === null){
+    if(upval === null){
+      up(inputArr)
     }
-    else if(downval != null){
-      for(var i=downval.length-1; i>=0; i--){
-        inputASorted.push(downval[i]);
-      }
-    }
-    else { 
-      inputASorted = inputArr.sort(function(a, b){return a-b});
-    }
-
-    let len = inputArr.length;
-    const mid = Math.ceil(len / 2);
-    medianval =
-      len % 2 == 0 ? (inputASorted[mid] + inputASorted[mid - 1]) / 2 : inputASorted[mid - 1];
-      outputField.value = medianval
+    const mid = Math.floor(inputArr.length / 2);
+    medianval = (upval.length === 0) ? (upval[mid-1] + upval[mid]) / 2 : upval[mid]
   }
-
-  
 }
 
 function mean() {
-  if(sumval==null){
-    sumval = inputArr.reduce(function(a, b){
-      return a + b;
-    }, 0);
+  if(meanval === null) {
+    if(sumval === null) {
+      sum(inputArr) 
+    }
+    meanval = (sumval / inputArr.length).toFixed(3)
   }
-  var sum = sumval;
-  sum *= 1.00;
-  outputField.value = Number.parseFloat(sum/inputArr.length).toFixed(3)
-}
-
-function mean_ret(values){
-  var sum = values.reduce(function(a, b){
-    return a + b;
-  }, 0);
-
-  return sum/values.length;
 }
 
 function std() {
-  if(stdval==null){
-      if(meanval==null){
-        meanval = mean_ret(inputArr);
-      }
-      var avg = meanval;
-      var squareDiffs = inputArr.map(function(value){
-      var diff = value - avg;
-      var sqrDiff = diff * diff;
-      return sqrDiff;
-    });
-    var avgSquareDiff = mean_ret(squareDiffs);
-    stdval = Math.sqrt(avgSquareDiff);
+  if(stdval === null) {
+    if(meanval === null) {
+      mean(inputArr);
+    }
+    stdval = inputArr.reduce((acc, item) => {
+      return acc + Math.pow(item - meanval, 2)
+    }, 0);
+    stdval = Math.sqrt(stdval / inputArr.length).toFixed(3)
   }
-  outputField.value = Number.parseFloat(stdval).toFixed(3);
 }
