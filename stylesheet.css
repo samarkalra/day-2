@@ -7,10 +7,11 @@ main {
 #input-wrapper > input {
     margin-right: 8px;
     padding: 12px 24px;
+    width: 12%;
 }
 #input-wrapper > select {
-    margin-right: 8px;
     padding: 12px 24px;
+    width: 8%;
 }
 #btn-wrapper {
     margin-top: 32px;
@@ -19,7 +20,11 @@ main {
     margin-right: 8px;
     padding: 12px 24px;
 }
+#btn-wrapper > button:last-of-type {
+    margin: 0;
+}
 #outputField {
     margin-top: 32px;
     padding: 12px 24px;
+    cursor: not-allowed;
 }
